@@ -9,13 +9,13 @@ import io
 app = Flask(__name__)
 
 # Camera credentials
-username = ""  # Replace with your RTSP username
-password = ""  # Replace with your RTSP password
+username = "mugundhjb@gmail.com"  # Replace with your RTSP username
+password = "JBMK656040"  # Replace with your RTSP password
 
 # RTSP URL for the main stream (HD)
 # rtsp_url = f"rtsp://{username}:{password}@192.168.1.10/stream1"  # Tapo IP Camera
 
-rtsp_url = "rtsp://admin:admin@192.168.1.7:1935"  # Mobile RTSP
+rtsp_url = "rtsp://admin:admin@192.168.38.103:1935"  # Mobile RTSP
 
 # Load TFLite Models and allocate tensors for plant disease and pest detection
 disease_interpreter = tf.lite.Interpreter(model_path="plant_disease_model.tflite")
@@ -154,20 +154,94 @@ def video_feed():
 
 @app.route('/')
 def index():
-    """Landing page."""
+    """Landing page with a mobile-friendly UI."""
     return '''
-    <html>
-        <head>
-            <title>Plant Disease and Pest Detection</title>
-        </head>
-        <body>
-            <h1>Plant Disease and Pest Detection</h1>
-            <p>View RTSP stream:</p>
-            <img src="/video_feed" width="640" height="480">
-            <p>This stream detects both plant diseases and pests. Detection is shown as bounding boxes on the stream.</p>
-        </body>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Plant Disease and Pest Detection</title>
+        <style>
+            /* General body styles */
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f5f5f5;
+                color: #333;
+            }
+
+            /* Container for the app */
+            .container {
+                max-width: 480px;
+                margin: 20px auto;
+                background: #fff;
+                border-radius: 12px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+            }
+
+            /* Header style */
+            .header {
+                background: #4caf50;
+                color: white;
+                padding: 15px;
+                text-align: center;
+                font-size: 1.2rem;
+            }
+
+            /* Stream section */
+            .stream {
+                position: relative;
+                overflow: hidden;
+                background: black;
+            }
+
+            .stream img {
+                width: 100%;
+                height: auto;
+                display: block;
+            }
+
+            /* Footer text */
+            .footer {
+                padding: 15px;
+                text-align: center;
+                font-size: 0.9rem;
+                color: #777;
+            }
+
+            /* Responsive design tweaks */
+            @media (max-width: 768px) {
+                .header {
+                    font-size: 1rem;
+                }
+
+                .footer {
+                    font-size: 0.8rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>Plant Disease and Pest Detection</h1>
+                <p>Stream and detect plant diseases and pests in real-time</p>
+            </div>
+            <div class="stream">
+                <!-- Stream from RTSP feed -->
+                <img src="/video_feed" alt="Live Stream">
+            </div>
+            <div class="footer">
+                <p>Real-time analysis powered by TFLite models.</p>
+            </div>
+        </div>
+    </body>
     </html>
     '''
+
 
 # Run the Flask app
 if __name__ == '__main__':

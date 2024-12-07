@@ -1,21 +1,12 @@
 import cv2
 import numpy as np
 import tensorflow as tf
-from flask import Flask, Response
+from flask import Flask, request, render_template, jsonify
 from PIL import Image
+import io
 
 # Flask app initialization
 app = Flask(__name__)
-
-# Camera credentials
-username = "mugundhjb@gmail.com"  # Replace with your RTSP username
-password = "JBMK656040"  # Replace with your RTSP password
-
-# RTSP URL for the main stream (HD)
-# rtsp_url = f"rtsp://{username}:{password}@192.168.1.10/stream1"  # Tapo IP Camera
-
-# Camera credentials
-rtsp_url = "rtsp://admin:admin@192.168.38.103:1935"  # RTSP URL
 
 # Load TFLite Model and allocate tensors for plant disease detection
 disease_interpreter = tf.lite.Interpreter(model_path="plant_disease_model.tflite")
@@ -61,55 +52,61 @@ def predict_plant_disease(image):
         print(f"Error in plant disease prediction: {e}")
         return None
 
-# Video stream processing
-def generate_frames():
-    cap = cv2.VideoCapture(rtsp_url)
-    if not cap.isOpened():
-        raise Exception("Could not open RTSP stream. Check the URL or network connection.")
-
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
-
-        # Extract detection region (center of the frame)
-        height, width, _ = frame.shape
-        size = min(height, width) // 4
-        x1, y1, x2, y2 = (width // 2 - size, height // 2 - size, width // 2 + size, height // 2 + size)
-        detection_region = frame[y1:y2, x1:x2]
-
-        # Convert to PIL image and predict
-        rgb_image = cv2.cvtColor(detection_region, cv2.COLOR_BGR2RGB)
-        pil_image = Image.fromarray(rgb_image)
-        prediction = predict_plant_disease(pil_image)
-
-        # Draw box and label
-        cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-        cv2.putText(frame, f"Plant Disease: {prediction}", (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX,
-                    0.6, (0, 255, 0), 2, cv2.LINE_AA)
-
-        # Encode and yield frame
-        _, buffer = cv2.imencode('.jpg', frame)
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
-
-    cap.release()
-
 # Flask Routes
-@app.route('/video_feed')
-def video_feed():
-    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
-
 @app.route('/')
 def index():
     return '''
-    <html>
-        <body>
-            <h1>Plant Disease Detection</h1>
-            <img src="/video_feed" width="640" height="480">
-        </body>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <title>Plant Disease Detection</title>
+    </head>
+    <body>
+        <h1>Plant Disease Detection</h1>
+        <form action="/predict" method="POST" enctype="multipart/form-data">
+            <input type="file" name="image" accept="image/*" required>
+            <button type="submit">Upload and Predict</button>
+        </form>
+    </body>
     </html>
     '''
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    if 'image' not in request.files:
+        return jsonify({"error": "No file part in the request."}), 400
+
+    file = request.files['image']
+
+    if file.filename == '':
+        return jsonify({"error": "No selected file."}), 400
+
+    try:
+        # Open the image file
+        image = Image.open(io.BytesIO(file.read())).convert('RGB')
+
+        # Predict the plant disease
+        prediction = predict_plant_disease(image)
+
+        if prediction:
+            return f'''
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <title>Prediction Result</title>
+            </head>
+            <body>
+                <h1>Prediction Result</h1>
+                <p>Plant Disease: {prediction}</p>
+                <a href="/">Back to Home</a>
+            </body>
+            </html>
+            '''
+        else:
+            return jsonify({"error": "Prediction failed."}), 500
+
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {e}"}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)
