@@ -13,9 +13,9 @@ username = ""  # Replace with your RTSP username
 password = ""  # Replace with your RTSP password
 
 # RTSP URL for the main stream (HD)
-rtsp_url = f"rtsp://{username}:{password}@192.168.1.10/stream1"  # Tapo IP Camera
+# rtsp_url = f"rtsp://{username}:{password}@192.168.1.10/stream1"  # Tapo IP Camera
 
-## rtsp_url = "rtsp://admin:admin@192.168.1.7:1935" # Mobile RTSP
+rtsp_url = "rtsp://admin:admin@192.168.1.7:1935"  # Mobile RTSP
 
 # Load TFLite Models and allocate tensors for plant disease and pest detection
 disease_interpreter = tf.lite.Interpreter(model_path="plant_disease_model.tflite")
@@ -107,9 +107,13 @@ def generate_processed_frames():
         # Extract the detection region for plant disease and pest
         detection_region = frame[y1:y2, x1:x2]
 
+        # Convert BGR image to RGB before passing to model
+        detection_region_rgb = cv2.cvtColor(detection_region, cv2.COLOR_BGR2RGB)
+        pil_image = Image.fromarray(detection_region_rgb)
+
         # Predict disease in the detection region
-        plant_disease_result = model_prediction(detection_region, model_type="plant")
-        pest_result = model_prediction(detection_region, model_type="pest")
+        plant_disease_result = model_prediction(pil_image, model_type="plant")
+        pest_result = model_prediction(pil_image, model_type="pest")
 
         # Draw the bounding box for plant disease and pest detection
         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
