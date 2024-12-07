@@ -27,10 +27,10 @@ pest_output_details = pest_interpreter.get_output_details()
 
 # Define class names for pests
 CLASS_NAMES_PEST = [
-    'Citrus Canker', 'Colorado Potato Beetles', 'Fall Armyworms', 'Cabbage Loopers',
-    'Spider Mites', 'Corn Borers', 'Brown Marmorated Stink Bugs', 'Corn Earworms',
-    'Thrips', 'Western Corn Rootworms', 'Tomato Hornworms', 'Armyworms',
-    'Africanized Honey Bees (Killer Bees)', 'Fruit Flies', 'Aphids'
+    'Citrus Canker', 'Colorado Beetles', 'Fall Armyworms', 'Loopers',
+    'Spider Mites', 'Borers', 'Brown Marmorated Stink Bugs', 'Earworms',
+    'Thrips', 'Western Rootworms', 'Hornworms', 'Armyworms',
+    'Honey Bees', 'Fruit Flies', 'Aphids'
 ]
 
 # Function to predict pests

@@ -40,28 +40,28 @@ pest_output_details = pest_interpreter.get_output_details()
 
 # Define class names for plant diseases
 CLASS_NAMES_PLANT = [
-    'Apple___Apple_scab', 'Apple___Black_rot', 'Apple___Cedar_apple_rust', 'Apple___healthy',
-    'Blueberry___healthy', 'Cherry_(including_sour)___Powdery_mildew',
-    'Cherry_(including_sour)___healthy', 'Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot',
-    'Corn_(maize)___Common_rust_', 'Corn_(maize)___Northern_Leaf_Blight', 'Corn_(maize)___healthy',
-    'Grape___Black_rot', 'Grape___Esca_(Black_Measles)', 'Grape___Leaf_blight_(Isariopsis_Leaf_Spot)',
-    'Grape___healthy', 'Orange___Haunglongbing_(Citrus_greening)', 'Peach___Bacterial_spot',
-    'Peach___healthy', 'Pepper,_bell___Bacterial_spot', 'Pepper,_bell___healthy',
-    'Potato___Early_blight', 'Potato___Late_blight', 'Potato___healthy',
-    'Raspberry___healthy', 'Soybean___healthy', 'Squash___Powdery_mildew',
-    'Strawberry___Leaf_scorch', 'Strawberry___healthy', 'Tomato___Bacterial_spot',
-    'Tomato___Early_blight', 'Tomato___Late_blight', 'Tomato___Leaf_Mold',
-    'Tomato___Septoria_leaf_spot', 'Tomato___Spider_mites Two-spotted_spider_mite',
-    'Tomato___Target_Spot', 'Tomato___Tomato_Yellow_Leaf_Curl_Virus', 'Tomato___Tomato_mosaic_virus',
-    'Tomato___healthy'
+    'Scab', 'Black_rot', 'Rust', 'healthy',
+    'healthy', 'downy_mildew ',
+    'healthy', 'Cercospora_leaf_spot Gray_leaf_spot',
+    'Common_rust_', 'Northern_Leaf_Blight', 'healthy',
+    'Black_rot', 'Esca_Black_Measles', 'Leaf_blight_(Isariopsis_Leaf_Spot)',
+    'healthy', 'Haunglongbing_(Citrus_greening)', 'Bacterial_spot',
+    'healthy', 'Bacterial_spot', 'healthy',
+    'Early_blight', 'Late_blight', 'healthy',
+    'healthy', 'healthy', 'Powdery_mildew',
+    'Leaf_scorch', 'healthy', 'Bacterial_spot',
+    'Early_blight', 'Late_blight', 'Leaf_Mold',
+    'Septoria_leaf_spot', 'Spider_mites Two-spotted_spider_mite',
+    'Target_Spot', 'Yellow_Leaf_Curl_Virus', 'mosaic_virus',
+    'healthy'
 ]
 
 # Define class names for pests
 CLASS_NAMES_PEST = [
-    'Citrus Canker', 'Colorado Potato Beetles', 'Fall Armyworms', 'Cabbage Loopers',
-    'Spider Mites', 'Corn Borers', 'Brown Marmorated Stink Bugs', 'Corn Earworms',
-    'Thrips', 'Western Corn Rootworms', 'Tomato Hornworms', 'Armyworms',
-    'Africanized Honey Bees (Killer Bees)', 'Fruit Flies', 'Aphids'
+    'Citrus Canker', 'Colorado Beetles', 'Fall Armyworms', 'Loopers',
+    'Spider Mites', 'Borers', 'Brown Marmorated Stink Bugs', 'Earworms',
+    'Thrips', 'Western Rootworms', 'Hornworms', 'Armyworms',
+    'Honey Bees', 'Fruit Flies', 'Aphids'
 ]
 
 # Function to predict plant disease or pest
